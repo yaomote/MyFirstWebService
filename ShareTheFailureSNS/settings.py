@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrapform',
+    'contact_form_bootstrap',
+    'contact_form',
     'Crud',
 ]
 

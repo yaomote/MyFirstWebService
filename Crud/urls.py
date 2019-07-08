@@ -1,5 +1,7 @@
 from django.conf.urls import url
 from Crud import views
+
+app_name = 'Crud'
 urlpatterns = [
     url(r'^members/$', views.index, name='index'),
     url(r'^members/add/$', views.edit, name='add'),
