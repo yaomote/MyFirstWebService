@@ -40,4 +40,16 @@
 
 <!-- jsを入れる -->
 {% block script %}
+<script>
+    $(function(){
+        $("#btn_del").click(function(){
+            if(confirm("削除しますか？")){
+                //yesの処理（何もぜず進む）
+            }else{
+                //cancelの処理
+                return false;
+            }
+        });
+    })
+</script>
 {% endblock %}

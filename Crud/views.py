@@ -38,7 +38,10 @@ def edit(request, id=None):
 
 #削除
 def delete(request, id=None):
-    return HttpResponse("削除")
+    # return HttpResponse("削除")
+    member = get_object_or_404(Member, pk=id)
+    member.delete()
+    return redirect('Crud:index')
 
 #詳細（おまけ）
 def detail(request, id=None):
