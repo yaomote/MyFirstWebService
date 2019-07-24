@@ -1,5 +1,5 @@
 """
-WSGI config for ShareTheFailureSNS project.
+WSGI config for MyFirstWebService project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ShareTheFailureSNS.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MyFirstWebService.settings')
 
 application = get_wsgi_application()

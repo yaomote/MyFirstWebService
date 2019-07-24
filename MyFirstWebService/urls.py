@@ -1,4 +1,4 @@
-"""ShareTheFailureSNS URL Configuration
+"""MyFirstWebService URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     #url(r'^Crud/', include('Crud.urls', namespace = 'Crud'))
     url(r'^Crud/', include('Crud.urls')),
+    url(r'', include('selbo.urls')), #2019/07/21追加 ホームディレクトリ
 ]

@@ -6,3 +6,5 @@ djangodb
 /static
 .DS_Store
 local_settings.py
+material
+gulp-work
