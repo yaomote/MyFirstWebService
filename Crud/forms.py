@@ -5,4 +5,4 @@ from Crud.models import Member
 class MemberForm(ModelForm):
     class Meta:
         model = Member
-        fields = ('name','email','age',)
+        fields = ('email', 'user_name', 'user_id', 'password')

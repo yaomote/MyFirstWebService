@@ -19,6 +19,6 @@ from django.conf.urls import url, include
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     #url(r'^Crud/', include('Crud.urls', namespace = 'Crud'))
-    url(r'^Crud/', include('Crud.urls')),
-    url(r'', include('selbo.urls')), #2019/07/21追加 ホームディレクトリ
+    url(r'', include('Crud.urls')),
+    url(r'^test/', include('selbo.urls')), #2019/07/21追加 ホームディレクトリ
 ]

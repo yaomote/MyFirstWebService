@@ -2,9 +2,10 @@ from django.db import models
 
 # Create your models here.
 class Member(models.Model):
-    name = models.CharField('氏名', max_length=255)
+    user_name = models.CharField('ユーザー名', max_length=255)
     email = models.CharField('E-Mail', max_length=255)
-    age = models.IntegerField('年齢', blank=True, default=0)
+    password = models.CharField('パスワード', max_length=255)
+    user_id = models.CharField('ユーザーID', max_length=255)
 
     def __str__(self):
         return self.name

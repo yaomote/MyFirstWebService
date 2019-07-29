@@ -22,13 +22,14 @@
     <tbody>
         {% for member in members %}
         <tr>
-            <td>{{ member.id }}</td>
-            <td><a href="{% url 'Crud:detail' id=member.id %}">{{ member.name }}</a></td>
+            <td>{{ member.user_id }}</td>
+            <!--<td><a href="{% url 'Crud:detail' id=member.user_id %}">{{ member.user_name }}</a></td>-->
             <td>{{ member.email }}</td>
-            <td>{{ member.age }}</td>
+            <td>{{ member.user_name }}</td>
+            <td>{{ member.password }}</td>
             <td>
-                <a href="{% url 'Crud:edit' id=member.id %}" class="btn btn-primary btn-sm">編集</a>
-                <a href="{% url 'Crud:delete' id=member.id %}" class="btn btn-primary btn-sm" id="btn_del">削除</a>
+                <a href="{% url 'Crud:edit' id=member.user_id %}" class="btn btn-primary btn-sm">編集</a>
+                <a href="{% url 'Crud:delete' id=member.user_id %}" class="btn btn-primary btn-sm" id="btn_del">削除</a>
             </td>
         </tr>
         {% endfor %}
