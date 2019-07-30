@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class Member(models.Model):
+class Account(models.Model):
     user_name = models.CharField('ユーザー名', max_length=255)
     email = models.CharField('E-Mail', max_length=255)
     password = models.CharField('パスワード', max_length=255)

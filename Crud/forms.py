@@ -1,8 +1,8 @@
 from django.forms import ModelForm
-from Crud.models import Member
+from Crud.models import Account
 
 
-class MemberForm(ModelForm):
+class AccountForm(ModelForm):
     class Meta:
-        model = Member
+        model = Account
         fields = ('email', 'user_name', 'user_id', 'password')

@@ -1,0 +1,80 @@
+@charset "UTF-8";
+* {
+  font-family: "sofia-pro","source-han-sans-japanese","ヒラギノ角ゴ ProN W3","Hiragino Kaku Gothic ProN","游ゴシック体","Yu Gothic",YuGothic,"メイリオ",Meiryo,sans-serif;
+  letter-spacing: 0.1em;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+li, ul {
+  list-style: none;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+h1 {
+  margin: 0;
+}
+
+body {
+  width: 100%;
+  height: 3000px;
+}
+
+.header-main {
+  background-color: #3cb371;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+}
+
+span {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+span .firstView-imageArea {
+  width: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+span .firstView-imageArea img {
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+span .firstView-textArea {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 80%;
+  margin: 0;
+  padding: 20px;
+  background-color: #FFFFFF;
+}
+
+span .firstView-formArea {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: right;
+  width: 60%;
+  height: 80%;
+  margin: 0;
+  padding: 20px;
+  background-color: #F5F5F5;
+}

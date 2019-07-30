@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}
+一覧を表示する予定
+{% endblock title %}
+
+{% block content %}
+<h3>一覧表示</h3>
+
+<a href="{% url 'Crud:add' %}" class="btn btn-primary btn-sm">追加</a>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>氏名</th>
+            <th>E-Mail</th>
+            <th>年齢</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for account in accounts %}
+        <tr>
+            <td>{{ account.user_id }}</td>
+            <td><a href="{% url 'Crud:detail' id=account.id %}">{{ account.user_name }}</a></td>
+            <td>{{ account.email }}</td>
+            <td>{{ account.user_name }}</td>
+            <td>{{ account.password }}</td>
+            <td>
+                <a href="{% url 'Crud:edit' id=account.id %}" class="btn btn-primary btn-sm">編集</a>
+                <a href="{% url 'Crud:delete' id=account.id %}" class="btn btn-primary btn-sm" id="btn_del">削除</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<!-- ページネーションをここに入れる -->
+
+{% endblock content %}
+
+<!-- jsを入れる -->
+{% block script %}
+<script>
+    $(function(){
+        $("#btn_del").click(function(){
+            if(confirm("削除しますか？")){
+                //yesの処理（何もぜず進む）
+            }else{
+                //cancelの処理
+                return false;
+            }
+        });
+    })
+</script>
+{% endblock %}

@@ -1,69 +1,46 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 
-from Crud.models import Member
-from Crud.forms import MemberForm
+from Crud.models import Account
+from Crud.forms import AccountForm
 
 # Create your views here.
 
-#ひとまず文字を返すだけ
+#登録
+def regist(request):
+    account = Account()
+    form = AccountForm(instance=account)
+    return render(request, 'accounts/regist.html', dict(form=form))
+
 #一覧
 def index(request):
-    members = Member.objects.all().order_by('user_id')
-    return render(request, 'members/index.html', {'members':members})
+    accounts = Account.objects.all().order_by('id') #値を取得
+    return render(request, 'accounts/index.html', {'accounts':accounts}) #第3引数⇒Templateに値を渡す
 
-def regist(request, id=None):
-    if id: #idがあるとき（編集の時）
-        #idで検索して、結果を戻すか、404エラー
-        member = get_object_or_404(Member, pk=id)
-    else: #idが無いとき（新規の時）
-        #Memberを作成
-        member = Member()
-
-    #POSTの時（新規であれ編集であれ登録ボタンが押されたとき）
-    if request.method == 'POST':
-        #フォームを生成
-        form = MemberForm(request.POST, instance=member)
-        if form.is_valid(): #バリデーションがOKなら保存
-            member = form.save(commit=False)
-            member.save()
-            return redirect('Crud:index')
-    else: #GETの時（フォームを生成）
-        form = MemberForm(instance=member)
-
-    #新規・編集画面を表示
-    return render(request, 'members/edit.html', dict(form=form, id=id))
-
-#新規と編集
+#編集
 def edit(request, id=None):
     if id: #idがあるとき（編集の時）
         #idで検索して、結果を戻すか、404エラー
-        member = get_object_or_404(Member, pk=id)
+        account = get_object_or_404(Account, pk=id)
     else: #idが無いとき（新規の時）
-        #Memberを作成
-        member = Member()
-
+        #Accountを作成
+        account = Account()
     #POSTの時（新規であれ編集であれ登録ボタンが押されたとき）
     if request.method == 'POST':
         #フォームを生成
-        form = MemberForm(request.POST, instance=member)
+        form = AccountForm(request.POST, instance=account)
         if form.is_valid(): #バリデーションがOKなら保存
-            member = form.save(commit=False)
-            member.save()
-            return redirect('Crud:index')
+            account = form.save(commit=False)
+            account.save()
+            return redirect('Crud:regist')
     else: #GETの時（フォームを生成）
-        form = MemberForm(instance=member)
-
+        form = AccountForm(instance=account)
     #新規・編集画面を表示
-    return render(request, 'members/edit.html', dict(form=form, id=id))
+    return render(request, 'accounts/edit.html', dict(form=form, id=id))
 
 #削除
 def delete(request, id=None):
-    # return HttpResponse("削除")
-    member = get_object_or_404(Member, pk=id)
-    member.delete()
-    return redirect('Crud:index')
-
+    return HttpResponse("削除")
 #詳細（おまけ）
 def detail(request, id=None):
     return HttpResponse("詳細")

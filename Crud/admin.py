@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Crud.models import Member
+from Crud.models import Account
 
 # Register your models here.
-admin.site.register(Member)
+admin.site.register(Account)
