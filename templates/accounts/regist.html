@@ -22,9 +22,10 @@
                   <p>testtesttesttesttesttesttesttesttesttesttesttesttest</p>
                 </div>
                 <h3 class="page-header">会員の登録</h3>
-                <form action="{% url 'Crud:add' %}" method="post" class="form-horizontal" role="form">
+                <form action="{% url 'Crud:regist' %}" method="post" class="form-horizontal" role="form">
                   {% csrf_token %}
                   {{ form|bootstrap_horizontal }}
+                  <!--{{ form.as_p }}-->
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button type="submit" class="btn btn-primary">送信</button>
@@ -32,6 +33,7 @@
                   </div>
                 </form>
                 <a href="{% url 'Crud:index' %}" class="btn btn-default btn-sm">戻る</a>
+                <p>{{ session_form_data.user_name }}</p>
                 </div>
               </div>
             </article>

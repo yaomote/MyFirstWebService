@@ -4,13 +4,29 @@ from django.http import HttpResponse
 from Crud.models import Account
 from Crud.forms import AccountForm
 
+#from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+
+import logging
 # Create your views here.
 
 #登録
 def regist(request):
     account = Account()
-    form = AccountForm(instance=account)
-    return render(request, 'accounts/regist.html', dict(form=form))
+    #POSTの時（新規であれ編集であれ登録ボタンが押されたとき）
+    if request.method == 'POST':
+        #フォームを生成
+        form = AccountForm(request.POST, instance=account)
+        if form.is_valid(): #バリデーションがOKなら保存
+            account = form.save(commit=False)
+            account.save()
+            request.session['form_data'] = request.POST
+            session_form_data = request.session.get('form_data')
+            return render(request, 'accounts/regist.html', dict(form=form, session_form_data=session_form_data))
+    else: #GETの時（フォームを生成）
+        form = AccountForm(instance=account)
+    session_form_data = request.session.get('form_data')
+    return render(request, 'accounts/regist.html', dict(form=form, session_form_data=session_form_data))
 
 #一覧
 def index(request):
