@@ -20,5 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     #url(r'^Crud/', include('Crud.urls', namespace = 'Crud'))
     url(r'', include('Crud.urls')),
-    url(r'^test/', include('selbo.urls')), #2019/07/21追加 ホームディレクトリ
+    url(r'^selbo/', include('selbo.urls')), #2019/07/21追加 ホームディレクトリ
 ]

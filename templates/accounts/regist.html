@@ -21,6 +21,7 @@
                   <h2>testtesttest</h2>
                   <p>testtesttesttesttesttesttesttesttesttesttesttesttest</p>
                 </div>
+
                 <h3 class="page-header">会員の登録</h3>
                 <form action="{% url 'Crud:regist' %}" method="post" class="form-horizontal" role="form">
                   {% csrf_token %}
@@ -33,7 +34,6 @@
                   </div>
                 </form>
                 <a href="{% url 'Crud:index' %}" class="btn btn-default btn-sm">戻る</a>
-                <p>{{ session_form_data.user_name }}</p>
                 </div>
               </div>
             </article>

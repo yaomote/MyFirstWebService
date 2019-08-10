@@ -1,5 +1,7 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.forms import ModelForm
+from selbo.models import Book
 
-class SignUpForm(UserCreationForm):
+class BookForm(UserCreationForm):
     class Meta:
-        fields = ('name', 'email', 'age')
+        model = Book
+        fields = ('book_id', 'book_title', 'author_name', 'book_attribute')

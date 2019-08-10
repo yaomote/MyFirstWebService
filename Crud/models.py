@@ -7,5 +7,8 @@ class Account(models.Model):
     password = models.CharField('パスワード', max_length=255)
     user_id = models.CharField('ユーザーID', max_length=255)
 
+    class Meta:
+        ordering = ('id',)
+
     def __str__(self):
         return self.name

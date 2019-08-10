@@ -22,11 +22,19 @@ def regist(request):
             account.save()
             request.session['form_data'] = request.POST
             session_form_data = request.session.get('form_data')
-            return render(request, 'accounts/regist.html', dict(form=form, session_form_data=session_form_data))
+            #return render(request, 'accounts/home.html', dict(form=form, session_form_data=session_form_data))
+            #return render(request, 'selbo/home.html', dict(session_form_data=session_form_data))
+            return redirect('selbo:home')
     else: #GETの時（フォームを生成）
         form = AccountForm(instance=account)
+
     session_form_data = request.session.get('form_data')
-    return render(request, 'accounts/regist.html', dict(form=form, session_form_data=session_form_data))
+    if session_form_data == None:
+        return render(request, 'accounts/regist.html', dict(form=form, session_form_data=session_form_data))
+    else:
+        #return render(request, 'accounts/home.html', dict(form=form, session_form_data=session_form_data))
+        #return render(request, 'selbo/home.html', dict(session_form_data=session_form_data))
+        return redirect('selbo:home')
 
 #一覧
 def index(request):
