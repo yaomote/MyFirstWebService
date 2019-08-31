@@ -7,6 +7,8 @@ from Crud.forms import AccountForm
 #from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
+from django.contrib.auth.models import User
+
 import logging
 # Create your views here.
 
@@ -40,6 +42,21 @@ def regist(request):
 def index(request):
     accounts = Account.objects.all().order_by('id') #値を取得
     return render(request, 'accounts/index.html', {'accounts':accounts}) #第3引数⇒Templateに値を渡す
+    
+#アカウントページ
+def accounts_detail(request, pk):
+    account = get_object_or_404(User, pk=pk)
+    return render(request, 'accounts/account_detail.html', {'account':account})
+    
+#ログイン
+#def login(request):
+#    accounts = Account.objects.all().order_by('id') #値を取得
+#    return render(request, 'accounts/login.html', {'accounts':accounts}) #第3引数⇒Templateに値を渡す
+def my_view(request):
+    if request.user.is_authenticated:
+        return HttpResponse(f'認証済みです: {request.user.username}')
+    else:
+        return HttpResponse('未認証です')
 
 #編集
 def edit(request, id=None):

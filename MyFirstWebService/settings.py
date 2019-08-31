@@ -145,3 +145,7 @@ else:
         filename = '/my_log_file.log',
         filemode = 'a'
     )
+
+
+#ログイン後トップページにリダイレクト
+LOGIN_REDIRECT_URL = '/'

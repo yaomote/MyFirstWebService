@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
+
 import urllib.request, urllib.error                         # urlアクセス
 from bs4 import BeautifulSoup                               # web scraping用
 from selenium import webdriver                              # 動的ページに対するscraping用
 from selenium.webdriver.chrome.options import Options       # webdriverの設定用
 import time                                                 # scrapingの時間制御用
 import mysql.connector                                      # データベース操作用
+
+import nlpSelbo                                             # 自然言語処理
 
 from scrapySelboLocal import *                              # ローカル設定
 
@@ -44,7 +48,7 @@ def main():
         # カーソルオブジェクトを作成。これでexecuteメソッドを使ってクエリを実行できる。
         cur = conn.cursor()
 
-        for i in range(98, 10000):
+        for i in range(674, 10000):
             # アクセスするURL
             #url = f"https://bookmeter.com/books/{i+1}"
             # URLにアクセスする htmlが帰ってくる → <html><head><title>例例例</title></head><body....
@@ -90,6 +94,7 @@ def main():
             maxEmotionCount = 0
             maxEmotion = ''
             maxEmotionList = ''
+            corpus = ''
 
             while pagenationFlag == True:
                 if j != 1:
@@ -115,7 +120,7 @@ def main():
 
                 content_elements = soup.select('.frame__content__text')
                 for content_element in content_elements:
-                    print(f"\n-------------content_element.text-------------\n{content_element.text}")
+                    print(f"\n-------------content_element.tex-------------\n{content_element.text}")
                     for emotionList in emotions:
                         for emotion in emotions[emotionList]:
                             emotionCount = content_element.text.count(f'{emotion}')
@@ -124,6 +129,7 @@ def main():
                         emotionNum = 0
                         emotionListNum += 1
                     emotionListNum = 0
+                    corpus += f'{content_element.text}\n'
 
                 for emotionList in emotions:
                     for emotion in emotions[emotionList]:
@@ -148,6 +154,9 @@ def main():
                         driver.quit()
 
             print(f'\n-------------emotionCountDict-------------\n{emotionCountDict}')
+            print(f'\n-------------corpus-------------\n{corpus}')
+
+            nlpSelbo.main(corpus)
 
             # emotionCountDictの初期化
             emotionCountDict.clear()
