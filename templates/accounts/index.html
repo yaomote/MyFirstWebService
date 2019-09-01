@@ -15,20 +15,18 @@
             <th>ユーザーID</th>
             <th>ユーザー名</th>
             <th>E-Mail</th>
-            <th>パスワード</th>
             <th>操作</th>
         </tr>
     </thead>
     <tbody>
         {% for account in accounts %}
         <tr>
-            <td>{{ account.user_id }}</td>
-            <td><a href="{% url 'Crud:detail' id=account.id %}">{{ account.user_name }}</a></td>
+            <td>{{ account.pk }}</td>
+            <td><a href="{% url 'Crud:accounts_detail' pk=account.pk %}">{{ account.username }}</a></td>
             <td>{{ account.email }}</td>
-            <td>{{ account.password }}</td>
             <td>
-                <a href="{% url 'Crud:edit' id=account.id %}" class="btn btn-primary btn-sm">編集</a>
-                <a href="{% url 'Crud:delete' id=account.id %}" class="btn btn-primary btn-sm" id="btn_del">削除</a>
+                <a href="{% url 'Crud:edit' id=account.pk %}" class="btn btn-primary btn-sm">編集</a>
+                <a href="{% url 'Crud:delete' id=account.pk %}" class="btn btn-primary btn-sm" id="btn_del">削除</a>
             </td>
         </tr>
         {% endfor %}

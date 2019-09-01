@@ -149,3 +149,7 @@ else:
 
 #ログイン後トップページにリダイレクト
 LOGIN_REDIRECT_URL = '/'
+
+
+#カスタムユーザモデルを使う
+AUTH_USER_MODEL = 'Crud.User'

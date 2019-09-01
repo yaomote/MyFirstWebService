@@ -34,12 +34,19 @@
                   </div>
                 </form>
                 <a href="{% url 'Crud:index' %}" class="btn btn-default btn-sm">戻る</a>
+
+                <div>
+                  <p>
+                    "アカウントをお持ちですか？ "
+                    <a href="{% url 'Crud:login' %}">ログインする</a>
+                  </p>
                 </div>
               </div>
-            </article>
-          </main>
-          <footer>
-          </footer>
-        </section>
-      </span>
+            </div>
+          </article>
+        </main>
+        <footer>
+        </footer>
+      </section>
+    </span>
 {% endblock content %}
