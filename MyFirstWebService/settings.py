@@ -44,8 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'user_sessions',
     'bootstrapform',
     'contact_form_bootstrap',
+    'bootstrap4',
     'contact_form',
     'Crud',
     'selbo', #2019/07/21追加 選書機能アプリケーション
@@ -59,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'user_sessions.middleware.SessionMiddleware',
 ]
 
 SESSION_COOKIE_AGE = 600 # 10分
@@ -148,8 +151,13 @@ else:
 
 
 #ログイン後トップページにリダイレクト
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/selbo/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 
 #カスタムユーザモデルを使う
 AUTH_USER_MODEL = 'Crud.User'
+
+
+#セッション管理
+SESSION_ENGINE = 'user_sessions.backends.db'

@@ -1,39 +1,41 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
-
-#from Crud.models import Account
-#from Crud.forms import AccountForm
-
-#from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
+from django.http import HttpResponse, HttpResponseRedirect
 
 from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
-from Crud.forms import SignUpForm
+from django.contrib.auth import get_user_model, login
+from Crud.forms import SignUpForm, LoginForm
+from django.contrib.auth import authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, LogoutView
 
 import logging
 # Create your views here.
 
 #登録
 def regist(request):
+    session_username = None
     account = get_user_model()
     #POSTの時（新規であれ編集であれ登録ボタンが押されたとき）
     if request.method == 'POST':
         #フォームを生成
-        #form = UserCreationForm(request.POST, instance=account)
         form = SignUpForm(request.POST)
         if form.is_valid(): #バリデーションがOKなら保存
             account = form.save(commit=False)
             account.save()
-            request.session['form_data'] = request.POST
-            session_form_data = request.session.get('form_data')
+            request.session['username'] = request.POST['username']
+            session_username = request.session['username']
             return redirect('selbo:home')
     else: #GETの時（フォームを生成）
         form = SignUpForm()
 
-    session_form_data = request.session.get('form_data')
-    if session_form_data == None:
-        return render(request, 'accounts/regist.html', dict(form=form, session_form_data=session_form_data))
+    if 'username' in request.POST and 'password' in request.POST:
+        request.session['username'] = request.POST['username']
+        request.session['password'] = request.POST['password']
+    if 'username' in request.session and 'password' in request.session:
+        session_username = request.session['username']
+        logged_in = True
+    if session_username == None:
+        return render(request, 'accounts/regist.html', dict(form=form))
     else:
         return redirect('selbo:home')
 
@@ -48,14 +50,25 @@ def accounts_detail(request, pk):
     return render(request, 'accounts/account_detail.html', {'account':account})
 
 #ログイン
-#def login(request):
-#    accounts = Account.objects.all().order_by('id') #値を取得
-#    return render(request, 'accounts/login.html', {'accounts':accounts}) #第3引数⇒Templateに値を渡す
-def my_view(request):
-    if request.user.is_authenticated:
-        return HttpResponse(f'認証済みです: {request.user.username}')
-    else:
-        return HttpResponse('未認証です')
+class Login(LoginView):
+    form_class = LoginForm
+    template_name = 'registration/login.html'
+    logged_in = False
+    username = None
+
+    def form_valid(self, form):
+        login(self.request, form.get_user())
+        if 'username' in self.request.POST and 'password' in self.request.POST:
+            self.request.session['username'] = self.request.POST['username']
+            self.request.session['password'] = self.request.POST['password']
+        if 'username' in self.request.session and 'password' in self.request.session:
+            session_username = self.request.session['username']
+            logged_in = True
+        return HttpResponseRedirect(self.get_success_url())
+
+#ログアウト
+class Logout(LoginRequiredMixin, LogoutView):
+    template_name = 'registration/logout.html'
 
 #編集
 def edit(request, id=None):

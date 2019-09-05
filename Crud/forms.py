@@ -25,3 +25,12 @@ class SignUpForm(UserCreationForm):
         
         self.fields['password2'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].widget.attrs['placeholder'] = 'パスワード（確認）'
+        
+
+class LoginForm(AuthenticationForm):
+    #ログオンフォームの定義
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for fields in self.fields.values():
+            fields.widget.attrs['class'] = 'form-control'
+            fields.widget.attrs['placeholder']= fields.label

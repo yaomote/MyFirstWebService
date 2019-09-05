@@ -19,9 +19,6 @@ from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    #url(r'^Crud/', include('Crud.urls', namespace = 'Crud'))
     url(r'', include('Crud.urls')),
     url(r'^selbo/', include('selbo.urls')), #2019/07/21追加 ホームディレクトリ
-    #url('accounts/', include('django.contrib.auth.urls')), #2019/08/26追加 ログイン
-    url(r'^login$', LoginView.as_view(), name='login'),
 ]
