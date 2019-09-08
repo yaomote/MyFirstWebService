@@ -7,5 +7,6 @@ djangodb
 .DS_Store
 local_settings.py
 material
+media
 gulp-work
 scrapySelboLocal.py

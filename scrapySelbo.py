@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import urllib.request, urllib.error                         # urlアクセス
+import requests                                             # urlアクセス
 from bs4 import BeautifulSoup                               # web scraping用
 from selenium import webdriver                              # 動的ページに対するscraping用
 from selenium.webdriver.chrome.options import Options       # webdriverの設定用
@@ -48,9 +49,11 @@ def main():
         # カーソルオブジェクトを作成。これでexecuteメソッドを使ってクエリを実行できる。
         cur = conn.cursor()
 
-        for i in range(674, 10000):
+        for i in range(889, 10000):
+            #本IDを格納
+            id = i
             # アクセスするURL
-            #url = f"https://bookmeter.com/books/{i+1}"
+            #url = f"https://bookmeter.com/books/{i}"
             # URLにアクセスする htmlが帰ってくる → <html><head><title>例例例</title></head><body....
             #html = urllib.request.urlopen(url=url)
             # ブラウザのオプションを格納する変数をもらってくる。
@@ -60,9 +63,9 @@ def main():
             # ブラウザを起動
             driver = webdriver.Chrome(chrome_options=options, executable_path='C:\\chromedriver.exe')
             #スクレイピングの間隔を開ける
-            time.sleep(30)
+            time.sleep(3)
             # ブラウザでアクセスする
-            driver.get(f"https://bookmeter.com/books/{i+1}")
+            driver.get(f"https://bookmeter.com/books/{i}")
             # HTMLを文字コードをUTF-8に変換してから取得します。
             html = driver.page_source.encode('utf-8')
             # htmlをBeautifulSoupで扱う
@@ -81,6 +84,19 @@ def main():
             # 要素の文字列を取得する → 例例例例例例
             author = author_tag.string
             author = str(author)
+
+            #--------本画像---------#
+            # 画像要素を取得する → <〇〇 class="header__authors">例例例例例例<〇〇>
+            image_tag = soup.select_one('div.group__image > a > img')
+            image_src = image_tag.get('src')
+            # 画像保存
+            re = requests.get(image_src)
+            image_path = f'{MEDIA_URL}' + image_src.split('/')[-1]
+            with open(image_path, 'wb') as f:
+                f.write(re.content)
+            image = 'selbo/' + image_src.split('/')[-1]
+            # 要素の文字列を取得する → 例例例例例例
+            print(f'\nimage_tag = {image_tag}\nimage_src = {image_src}\n{type(image_tag)}\nimage = {image}\n')
 
             print(f'\n-------------title = {title}, author = {author}-------------\n')
 
@@ -109,10 +125,10 @@ def main():
                     # スクレイピングの間隔を開ける
                     time.sleep(30)
                     # ブラウザでアクセスする
-                    driver.get(f"https://bookmeter.com/books/{i+1}?page={j}")
-                    print(f"\n-------------https://bookmeter.com/books/{i+1}?page={j}-------------\n")
+                    driver.get(f"https://bookmeter.com/books/{i}?page={j}")
+                    print(f"\n-------------https://bookmeter.com/books/{i}?page={j}-------------\n")
                 else:
-                    print(f"\n-------------https://bookmeter.com/books/{i+1}-------------\n")
+                    print(f"\n-------------https://bookmeter.com/books/{i}-------------\n")
                 # HTMLを文字コードをUTF-8に変換してから取得します。
                 html = driver.page_source.encode('utf-8')
                 # htmlをBeautifulSoupで扱う
@@ -120,7 +136,7 @@ def main():
 
                 content_elements = soup.select('.frame__content__text')
                 for content_element in content_elements:
-                    print(f"\n-------------content_element.tex-------------\n{content_element.text}")
+                    print(f"\n-------------content_element.text-------------\n{content_element.text}")
                     for emotionList in emotions:
                         for emotion in emotions[emotionList]:
                             emotionCount = content_element.text.count(f'{emotion}')
@@ -168,14 +184,35 @@ def main():
 
             # データベース更新
             try:
-                sql = "INSERT INTO selbo_book (book_title, author_name, book_attribute) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE book_title = VALUES (book_title), author_name = VALUES (author_name), book_attribute = VALUES (book_attribute)"
-                cur.execute(sql, (title, author, maxEmotionList))
+                sql = """
+                INSERT INTO selbo_book (
+                    book_id,
+                    book_title,
+                    author_name,
+                    book_attribute,
+                    book_image
+                )
+                VALUES (
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s
+                )
+                ON DUPLICATE KEY UPDATE
+                    book_id = VALUES (book_id),
+                    book_title = VALUES (book_title),
+                    author_name = VALUES (author_name),
+                    book_attribute = VALUES (book_attribute),
+                    book_image = VALUES (book_image)
+                """
+                cur.execute(sql, (id, title, author, maxEmotionList, image))
                 conn.commit()
             except:
                 conn.rollback()
                 raise
 
-            print(f'\n-----------{i+1}冊目 完了----------\n')
+            print(f'\n-----------{i}冊目 完了----------\n')
 
             #cur.execute('SELECT book_title FROM selbo_book')
             #result = cur.fetchall()
@@ -187,6 +224,8 @@ def main():
         return
 
 if __name__ == '__main__':
+    # 画像保存パス
+    MEDIA_URL = 'media/selbo/'
     # 感情属性のカウント用初期設定
     emotionListNum = 0
     emotionNum = 0

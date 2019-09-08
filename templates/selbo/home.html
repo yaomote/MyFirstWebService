@@ -29,12 +29,14 @@
         <tr>
           <th>タイトル</th>
           <th>著者</th>
+          <th>画像</th>
         </tr>
         <tbody>
           {% for post in object_list %}
           <tr>
-            <td width="35%">{{ post.book_title }}</td>
-            <td width="65%">{{ post.author_name }}</td>
+            <td width="30%">{{ post.book_title }}</td>
+            <td width="40%">{{ post.author_name }}</td>
+            <td width="20%"><img src='{{ MEDIA_URL }}{{ post.book_image }}' width=200></td>
           </tr>
           {% endfor %}
         </tbody>

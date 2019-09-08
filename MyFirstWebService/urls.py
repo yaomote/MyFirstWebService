@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.contrib.auth.views import LoginView, LogoutView
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('Crud.urls')),
     url(r'^selbo/', include('selbo.urls')), #2019/07/21追加 ホームディレクトリ
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

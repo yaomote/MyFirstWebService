@@ -4,6 +4,8 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from selbo.models import Book
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True    #クラスをRunPython操作で利用できるように
@@ -42,6 +44,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     username_validator = UnicodeUsernameValidator()
 
+    user_id = models.ManyToManyField(Book, blank=True)
     username = models.CharField(
         _('username'),
         max_length=150,
