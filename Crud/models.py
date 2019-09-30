@@ -72,6 +72,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    profile_img = models.ImageField(upload_to='crud', default='crud/default.jpg')
 
     objects = UserManager()
 
@@ -83,9 +84,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
-    def clean(self):
-        super().clean()
-        self.email = self.__class__.objects.normalize_email(self.email)
+    #def clean(self):
+        #super().clean()
+        #self.email = self.__class__.objects.normalize_email(self.email)
 
     def get_full_name(self):
         """

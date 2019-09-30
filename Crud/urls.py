@@ -10,11 +10,11 @@ app_name = 'Crud'
 urlpatterns = [
     url(r'^$', views.regist, name='regist'),
     url(r'^accounts/$', views.index, name='index'),
-    url(r'^accounts/(?P<pk>\d+)/$', views.accounts_detail, name='accounts_detail'),
+    path('accounts/<int:pk>/', views.accounts_detail, name='accounts_detail'),
     path('accounts/login/', views.Login.as_view(template_name='registration/login.html'), name='login'),
     path('accounts/logout/', views.Logout.as_view(template_name='registration/logout.html'), name='logout'),
-    url(r'^accounts/add/$', views.edit, name='add'),
-    url(r'^accounts/edit/(?P<id>\d+)$', views.edit, name='edit'),
-    url(r'^accounts/delete/(?P<id>\d+)/$', views.delete, name='delete'),
-    url(r'^accounts/detail/(?P<id>\d+)/$', views.detail, name='detail'),
+    path('accounts/edit/<int:pk>/', views.UserUpdate.as_view(), name='edit'),
+    path('accounts/edit/<int:pk>/password_change/', views.PasswordChange.as_view(), name='password_change'),
+    path('accounts/edit/<int:pk>/password_change/done/', views.PasswordChangeDone.as_view(), name='password_change_done'),
+    path('accounts/edit/<int:pk>/delete/', views.UserDeleteView.as_view(), name='delete'),
 ]

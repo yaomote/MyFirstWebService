@@ -6,6 +6,6 @@ from . import views
 
 app_name = 'selbo'
 urlpatterns = [
-    #url(r'^$', views.home, name='home'),
     path('', views.IndexView.as_view(), name='home'),
+    path('ajax/', views.ajax_add_post, name='ajax_add_post'),
 ]

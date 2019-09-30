@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+{% load staticfiles %}
+
+{% block title %}会員の編集{% endblock title %}
+
+{% block content %}
+<main>
+  <div class = "content-area">
+    <div class = "menu-area">
+      <button id = "prof_edit_button" class = "btn prof-edit-form-menu" type = "button" onclick = "location.href='{% url 'Crud:edit' pk=user.id %}'">プロフィール編集</button>
+      <button id = "pass_edit_button" class = "btn prof-edit-form-menu" type = "button" onclick = "location.href='{% url 'Crud:password_change' pk=user.id %}'">パスワード変更</button>
+      <button id = "account_delete_button" class = "btn prof-edit-form-menu" type = "button">アカウント削除</button>
+    </div>
+    <div class = "form-area">
+      <div id = "pass_edit_area" class = "pass-edit-area">
+        <form role="form" method="post">
+          {% csrf_token %}
+          <p>あなたのアカウント「@{{ user.username }}」を、本当に削除してもよろしいですか？</p>
+          <button type="submit" class="button is-danger">削除</button>
+          <a href="javascript:void(0);" onclick="window.history.back();" class="button is-text">キャンセル</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>
+</footer>
+{% endblock content %}

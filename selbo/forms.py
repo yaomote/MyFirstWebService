@@ -13,4 +13,3 @@ class SearchForm(forms.Form):
         label = 'なりたい気分',
         required = True,
     )
-    #image = forms.ImageField()

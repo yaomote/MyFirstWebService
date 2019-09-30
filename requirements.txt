@@ -5,6 +5,7 @@ chardet==3.0.4
 Django==2.1.11
 django-bootstrap-form==3.4
 django-bootstrap4==0.0.8
+django-cleanup==4.0.0
 django-contact-form==1.7
 django-contact-form-bootstrap==0.1a1
 django-forms-bootstrap==3.1.0

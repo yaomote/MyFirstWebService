@@ -49,7 +49,7 @@ def main():
         # カーソルオブジェクトを作成。これでexecuteメソッドを使ってクエリを実行できる。
         cur = conn.cursor()
 
-        for i in range(889, 10000):
+        for i in range(1449, 10000):
             #本IDを格納
             id = i
             # アクセスするURL
@@ -123,7 +123,7 @@ def main():
                     # ブラウザを起動
                     driver = webdriver.Chrome(chrome_options=options, executable_path='C:\\chromedriver.exe')
                     # スクレイピングの間隔を開ける
-                    time.sleep(30)
+                    time.sleep(5)
                     # ブラウザでアクセスする
                     driver.get(f"https://bookmeter.com/books/{i}?page={j}")
                     print(f"\n-------------https://bookmeter.com/books/{i}?page={j}-------------\n")
@@ -219,6 +219,7 @@ def main():
             #print(result)
 
         print('\n-----------scraping 完了----------\n')
+
         return
     else:
         return

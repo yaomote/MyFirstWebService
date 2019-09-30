@@ -25,22 +25,24 @@
       {% if object_list|length == 0 %}
            <p>検索結果が存在しません。</p>
       {% else %}
-      <table class="table table-hover table-bordered">
-        <tr>
-          <th>タイトル</th>
-          <th>著者</th>
-          <th>画像</th>
-        </tr>
-        <tbody>
-          {% for post in object_list %}
-          <tr>
-            <td width="30%">{{ post.book_title }}</td>
-            <td width="40%">{{ post.author_name }}</td>
-            <td width="20%"><img src='{{ MEDIA_URL }}{{ post.book_image }}' width=200></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="book_list">
+        {% for post in object_list %}
+        <div class="book_area">
+          <h2>{{ post.book_title }}</h2>
+          <h3>{{ post.author_name }}</h3>
+          <div class="book_image_area">
+            <img src='{{ MEDIA_URL }}{{ post.book_image }}' width=200>
+          </div>
+          <div class="bookshelf_regist_area">
+            <form class="ajax-add-post" action="{% url 'selbo:ajax_add_post' %}" method="POST" onclick="getId(this);">
+              {% csrf_token %}
+              <p class="book-id" style="display:none">{{ post.book_id }}</p>
+              <button class="btn btn-bookshelf-regist" type="submit">本棚へ追加</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
       {% endif %}
     </section>
     <div class="col-6 offset-3 justify-content-center">
@@ -51,4 +53,99 @@
   </div>
 </main>
 <p id="page-top"><a href="#">PAGE TOP</a></p>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    // グローバル変数
+    var id_ajax_add_post;
+    // ページ読み込み時処理
+    $(function() {
+        // book_idの識別用id属性
+        var addId = "btn_bookshelf_regist_"
+        var tmp = document.getElementsByClassName("btn-bookshelf-regist");
+        // 本棚追加フォーム番号用id属性
+        var addId2 = "ajax_add_post_"
+        var tmp2 = document.getElementsByClassName("ajax-add-post");
+
+        for(var i = 0; i <= tmp.length - 1; i++){
+            // 各本のid追加
+            tmp[i].setAttribute("id", addId + i);
+            tmp2[i].setAttribute("id", addId2 + i);
+
+            // ページ読み込み時に本棚登録状況を反映
+
+        }
+    })
+
+    // ajax-add-postのidを格納
+    function getId(element) {
+        id_ajax_add_post = element.getAttribute('id');
+        id_btn_bookshelf_regist = element.getElementsByTagName('button')[0].getAttribute('id');
+    }
+
+    //////////////////////
+    // 以下ajax処理
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    // 送信ボタンで呼ばれる
+    $('.ajax-add-post').on('submit', e => {
+        // デフォルトのイベントをキャンセルし、ページ遷移しないように!
+        e.preventDefault();
+        $.ajax({
+            'url': '{% url "selbo:ajax_add_post" %}',
+            'type': 'POST',
+            'data': {
+                'book_id': $('#' + id_ajax_add_post).find('p').text(),  // 本id
+            },
+            'dataType': 'json'
+        }).done( function(data) {
+            if (data.flag == 'flag_on') {
+                document.getElementById(id_btn_bookshelf_regist).innerText = '本棚登録中';
+            }
+            else if (data.flag == 'flag_off') {
+                document.getElementById(id_btn_bookshelf_regist).innerText = '本棚へ追加';
+            }
+            else {
+                // エラー処理
+            }
+            // <p>はろー</p>のような要素を作成し、それを記事一覧エリアに追加し、入力欄をクリアする。
+            // const p = $('<p>', {text: response.username});
+            // $('#posts').prepend(p);
+            // $('#id_title').val('');
+        });
+
+    });
+    // ajax処理ここまで
+    //////////////////////
+</script>
 {% endblock %}

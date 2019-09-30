@@ -3,10 +3,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model, login
-from Crud.forms import SignUpForm, LoginForm
+from Crud.forms import SignUpForm, LoginForm, UserUpdateForm, MyPasswordChangeForm
 from django.contrib.auth import authenticate
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
+from selbo.models import Book
+from django.views import generic
+from django.urls import reverse, reverse_lazy
 
 import logging
 # Create your views here.
@@ -46,8 +49,14 @@ def index(request):
 
 #アカウントページ
 def accounts_detail(request, pk):
+    context = {}
     account = get_object_or_404(get_user_model(), pk=pk)
-    return render(request, 'accounts/account_detail.html', {'account':account})
+    context['account'] = account
+    context['book_regist_num'] = account.user_id.all().count()
+    context['request_pk'] = int(pk)
+    for book in account.user_id.all():
+        context.setdefault('book_info', []).append([book.book_title, book.book_image.name])
+    return render(request, 'accounts/account_detail.html', context)
 
 #ログイン
 class Login(LoginView):
@@ -66,34 +75,57 @@ class Login(LoginView):
             logged_in = True
         return HttpResponseRedirect(self.get_success_url())
 
+
 #ログアウト
 class Logout(LoginRequiredMixin, LogoutView):
     template_name = 'registration/logout.html'
 
 #編集
-def edit(request, id=None):
-    if id: #idがあるとき（編集の時）
-        #idで検索して、結果を戻すか、404エラー
-        account = get_object_or_404(Account, pk=id)
-    else: #idが無いとき（新規の時）
-        #Accountを作成
-        account = Account()
-    #POSTの時（新規であれ編集であれ登録ボタンが押されたとき）
-    if request.method == 'POST':
-        #フォームを生成
-        form = AccountForm(request.POST, instance=account)
-        if form.is_valid(): #バリデーションがOKなら保存
-            account = form.save(commit=False)
-            account.save()
-            return redirect('Crud:regist')
-    else: #GETの時（フォームを生成）
-        form = AccountForm(instance=account)
-    #新規・編集画面を表示
-    return render(request, 'accounts/edit.html', dict(form=form, id=id))
+class OnlyYouMixin(UserPassesTestMixin):
+    raise_exception = True
+
+    def test_func(self):
+        account = self.request.user
+        return account.pk == self.kwargs['pk']
+
+class UserUpdate(OnlyYouMixin, generic.UpdateView):
+    model = get_user_model()
+    template_name = 'accounts/edit.html'
+    form_class = UserUpdateForm
+
+    def form_valid(self, form):
+        #ProfileEditFormのupdateメソッドにログインユーザを渡して更新
+        form.update(user=self.request.user)
+        return super().form_valid(form)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        #更新前のユーザ情報をkwargsとして渡す
+        kwargs.update({
+            'username': self.request.user.username,
+            'email': self.request.user.email,
+        })
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('Crud:accounts_detail', args=[self.request.user.id], )
+
+class PasswordChange(PasswordChangeView):
+    template_name = 'accounts/password_change.html'
+    form_class = MyPasswordChangeForm
+    def get_success_url(self):
+        return reverse('Crud:password_change_done', args=[self.request.user.id], )
+
+class PasswordChangeDone(PasswordChangeDoneView):
+    template_name = 'accounts/password_change_done.html'
 
 #削除
-def delete(request, id=None):
-    return HttpResponse("削除")
-#詳細（おまけ）
-def detail(request, id=None):
-    return HttpResponse("詳細")
+class UserDeleteView(OnlyYouMixin, generic.DeleteView):
+    model = get_user_model()
+    template_name = 'accounts/delete.html'
+    success_url = reverse_lazy('Crud:regist')
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+    #def delete(self, request, *args, **kwargs):
+    #    result = super().delete(request, *args, **kwargs)
+    #    return result

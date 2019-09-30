@@ -7,8 +7,6 @@
 {% block content %}
 <h3>一覧表示</h3>
 
-<a href="{% url 'Crud:add' %}" class="btn btn-primary btn-sm">追加</a>
-
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
@@ -22,11 +20,11 @@
         {% for account in accounts %}
         <tr>
             <td>{{ account.pk }}</td>
-            <td><a href="{% url 'Crud:accounts_detail' pk=account.pk %}">{{ account.username }}</a></td>
+            <td><a href="{% url 'Crud:accounts_detail' pk=account.id %}">{{ account.username }}</a></td>
             <td>{{ account.email }}</td>
             <td>
-                <a href="{% url 'Crud:edit' id=account.pk %}" class="btn btn-primary btn-sm">編集</a>
-                <a href="{% url 'Crud:delete' id=account.pk %}" class="btn btn-primary btn-sm" id="btn_del">削除</a>
+                <a href="{% url 'Crud:edit' pk=account.id %}" class="btn btn-primary btn-sm">編集</a>
+                <a href="{% url 'Crud:delete' pk=account.id %}" class="btn btn-primary btn-sm" id="btn_del">削除</a>
             </td>
         </tr>
         {% endfor %}

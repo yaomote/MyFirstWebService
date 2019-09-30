@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user_sessions',
+    'django_cleanup',
+#    'user_sessions',
     'bootstrapform',
     'contact_form_bootstrap',
     'bootstrap4',
@@ -61,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'user_sessions.middleware.SessionMiddleware',
+#    'user_sessions.middleware.SessionMiddleware',
 ]
 
 SESSION_COOKIE_AGE = 600 # 10分
@@ -161,7 +162,7 @@ AUTH_USER_MODEL = 'Crud.User'
 
 
 #セッション管理
-SESSION_ENGINE = 'user_sessions.backends.db'
+#SESSION_ENGINE = 'user_sessions.backends.db'
 
 
 #画像ファイルのパスのルート、URLのルート

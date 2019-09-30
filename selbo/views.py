@@ -1,37 +1,15 @@
-#from django.shortcuts import render, redirect
-#from django.http import HttpResponseRedirect
-#
-#import urllib.request, urllib.error
-#from bs4 import BeautifulSoup
-#import time
-#
-#from selbo.models import Book
-#
-#import logging
-#
-## Create your views here.
-#def home(request):
-#    session_username = None
-#    if 'username' in request.POST and 'password' in request.POST:
-#        request.session['username'] = request.POST['username']
-#        request.session['password'] = request.POST['password']
-#    if 'username' in request.session and 'password' in request.session:
-#        session_username = request.session['username']
-#        logged_in = True
-#    book = Book()
-#
-#    if session_username == None:
-#        return redirect('Crud:regist')
-#    else:
-#        return render(request, 'selbo/home.html', dict(session_username=session_username))
-
-
 import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from .models import Book
 from .forms import SearchForm
 from django.db.models import Q
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import get_user_model
+import json
+from django.http import JsonResponse
+
 logger = logging.getLogger('development')
 class IndexView(LoginRequiredMixin, generic.ListView):
     paginate_by = 5
@@ -70,3 +48,29 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         else:
             # 何も返さない
             return Book.objects.none()
+
+
+def ajax_add_post(request):
+    if 'username' in request.session and 'password' in request.session:
+        session_username = request.session['username']
+        print(f'*******************session_username = {session_username}')
+        account = get_object_or_404(get_user_model(), username=session_username)
+
+    book_id = request.POST.get("book_id", None)
+
+    if get_user_model().objects.filter(user_id__book_id=book_id, username=account.username).first() is None:
+        print('test1')
+        print(get_user_model().objects.filter(user_id__book_id=book_id))
+        account.user_id.add(Book.objects.get(book_id = book_id))
+        user = {
+            'flag': 'flag_on',
+        }
+        return JsonResponse(user)
+    else :
+        print('test2')
+        print(get_user_model().objects.filter(user_id__book_id=book_id))
+        account.user_id.remove(Book.objects.get(book_id = book_id))
+        user = {
+            'flag': 'flag_off',
+        }
+        return JsonResponse(user)

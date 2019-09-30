@@ -1,15 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="user-name">@{{ account.username }}</h2>
+<div class="profile-area">
+  <div class="profile-img-area">
+    <img src='{{ MEDIA_URL }}{{ account.profile_img }}' width=200>
+  </div>
+  <div class="profile-content-area">
+    {% if user.is_authenticated and request_pk == user.id %}
+      <a class="btn btn-primary" href="{% url 'Crud:edit' account.id %}">プロフィール編集</a>
+    {% endif %}
+    <h2 class="user-id-num">{{ account.id }}</h2>
+    <h2 class="user-name">{{ account.username }}</h2>
+    <h2 class="book-regist-num">{{ book_regist_num }}</h2>
+  </div>
+</div>
 
-{{ account.is_superuser }} <!-- 管理者の場合はTrue　-->
-
-<!-- ユーザーの持つ権限によって表示を切り替え　-->
-{% if account.is_superuser %}
-  <p>管理者</p>
-{% else %}
-  <p>一般ユーザー</p>
-{% endif %}
+<div class="bookshelf-area">
+  {% for mybook in book_info %}
+  <div class="mybook_area">
+    <div class="book_image_area">
+      <img src='{{ MEDIA_URL }}{{ mybook.1 }}' width=200>
+    </div>
+  {% endfor %}
+</div>
 
 {% endblock %}
